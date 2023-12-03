@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic-settings
+openai
+langchain
+python-dotenv
+ruff
+numpy
+Pillow
