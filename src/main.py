@@ -85,14 +85,14 @@ def analyze_text(text: str):
     end_time = datetime.now()
     execution_time = (end_time - start_time).total_seconds()
 
-    # Construye la información de la predicción y ejecución
     nlp_info = {
-        "pos_tags": [token.pos_ for token in doc],
+        "tokens": [{"text": token.text, "pos": token.pos_, "embedding": token.vector.tolist()} for token in doc],
         "ner": [{"text": ent.text, "label": ent.label_} for ent in doc.ents],
     }
 
     result = PredictionResult(sentiment_score, sentiment_category, execution_time, nlp_info)
     return result
+
 
 @app.get("/reports")
 def generate_report():
