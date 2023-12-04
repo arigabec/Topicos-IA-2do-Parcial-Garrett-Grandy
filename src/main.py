@@ -1,8 +1,5 @@
 from fastapi import (
     FastAPI,
-    Depends,
-    UploadFile, 
-    File,
     status,
     HTTPException, 
 )
@@ -15,6 +12,7 @@ from src.config import get_settings
 import numpy as np
 from functools import cache
 from PIL import Image
+from src.sentiment_analysis_model import SentimentAnalysisModel
 
 # Colocamos en una lista los datos de cada request de /sentiment
 execution_logs = []
@@ -22,8 +20,8 @@ execution_logs = []
 _SETTINGS = get_settings()
 
 app = FastAPI(
-    title = _SETTINGS.service_name,
-    version = _SETTINGS.k_revision
+    title=_SETTINGS.service_name,
+    version=_SETTINGS.k_revision
 )
 
 app.add_middleware(
@@ -34,19 +32,37 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Instancia del modelo de análisis de sentimiento
+sentiment_model = SentimentAnalysisModel()
+
 @app.get("/status")
 def root():
-    return {"status": "OK",
-            "message": "API is running",
-            "model": "",
-            "service": "Análisis del sentimiento API es un servicio que permite analizar el sentimiento que expresa un texto.",
-            "version": "1.0.0",
-            "author": "Camila Grandy Camacho y Ariane Garrett Becerra",
-            }
+    return {
+        "status": "OK",
+        "message": "API is running",
+        "model": "",
+        "service": "Análisis del sentimiento API es un servicio que permite analizar el sentimiento que expresa un texto.",
+        "version": "1.0.0",
+        "author": "Camila Grandy Camacho y Ariane Garrett Becerra",
+    }
 
 @app.post("/sentiment")
-def detect_sentiment():
-    return {"sentiment": "OK"}
+def detect_sentiment(text: str, range: bool = False):
+    try:
+        label, score, execution_time = sentiment_model.analyze_sentiment(text)
+        response_data = {
+            "sentiment": label,
+            "confidence": score,
+            "execution_time": execution_time
+        }
+
+        # Agregar el rango de puntuación si el parámetro "range" es True
+        if range:
+            response_data["range"] = score
+
+        return response_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during sentiment analysis: {str(e)}")
 
 @app.post("/analysis")
 def generate_analysis():
