@@ -1,18 +1,17 @@
 from fastapi import (
     FastAPI,
     status,
-    HTTPException, 
+    HTTPException,
+    Depends
 )
-import io
-import cv2
 import csv
 from fastapi.responses import FileResponse
 from starlette.middleware.cors import CORSMiddleware
 from src.config import get_settings
-import numpy as np
 from functools import cache
-from PIL import Image
 from src.sentiment_analysis_model import SentimentAnalysisModel
+from src.nlp_analysis import textAnalysis
+import spacy
 
 # Colocamos en una lista los datos de cada request de /sentiment
 execution_logs = []
@@ -34,6 +33,10 @@ app.add_middleware(
 
 # Instancia del modelo de análisis de sentimiento
 sentiment_model = SentimentAnalysisModel()
+
+@cache
+def get_nlp():
+    return spacy.load("es_core_news_md")
 
 @app.get("/status")
 def root():
@@ -65,8 +68,9 @@ def detect_sentiment(text: str, range: bool = False):
         raise HTTPException(status_code=500, detail=f"Error during sentiment analysis: {str(e)}")
 
 @app.post("/analysis")
-def generate_analysis():
-    return {"sentiment": "OK"}
+def generate_analysis(text: str, nlp=Depends(get_nlp)):
+    results = textAnalysis(text, "Análisis del sentimiento", nlp)
+    return results
 
 @app.get("/reports")
 def generate_report():
