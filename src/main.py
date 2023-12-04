@@ -5,6 +5,7 @@ from fastapi import (
     Depends
 )
 import csv
+import time
 from fastapi.responses import FileResponse
 from starlette.middleware.cors import CORSMiddleware
 from src.config import get_settings
@@ -14,7 +15,7 @@ from src.analysis_model import AnalysisModel
 import spacy
 from datetime import datetime
 
-# Colocamos en una lista los datos de cada request de /sentiment
+# Colocamos en una lista los datos de cada request de /sentiment y /analysis
 execution_logs = []
 
 _SETTINGS = get_settings()
@@ -51,25 +52,35 @@ def root():
     return {
         "status": "OK",
         "message": "API is running",
-        "model": "",
+        "model": "transformers - lxyuan/distilbert-base-multilingual-cased-sentiments-student, hugging_face - spacy, openai - gpt3.5 ",
         "service": "Análisis del sentimiento API es un servicio que permite analizar el sentimiento que expresa un texto.",
         "version": "1.0.0",
         "author": "Camila Grandy Camacho y Ariane Garrett Becerra",
     }
 
 @app.post("/sentiment")
-def detect_sentiment(text: str, range: bool = False):
+def detect_sentiment(text: str):
     try:
-        label, score, execution_time = sentiment_model.analyze_sentiment(text)
+        label, score, execution_time, transformed_scores = sentiment_model.analyze_sentiment(text)
         response_data = {
             "sentiment": label,
             "confidence": score,
-            "execution_time": execution_time
+            "execution_time": execution_time,
+            "prediction_range": transformed_scores
         }
 
-        # Agregar el rango de puntuación si el parámetro "range" es True
-        if range:
-            response_data["range"] = score
+        log = {
+            "endpoint": "/sentiment",
+            "date": str(time.ctime()),
+            "text": text,
+            "sentiment": label,
+            "confidence": score,
+            "execution_time": execution_time,
+            "prediction_range": transformed_scores,
+            "NLP info": ""
+        }
+
+        execution_logs.append(log)
 
         return response_data
     except Exception as e:
@@ -80,7 +91,7 @@ def analyze_text(text: str):
     start_time = datetime.now()
 
     # Llama al modelo de análisis
-    sentiment_score, sentiment_category, subjectivity, doc = analysis_model.perform_analysis(text)
+    sentiment_score, sentiment_category, transformed_scores, doc = analysis_model.perform_analysis(text)
 
     end_time = datetime.now()
     execution_time = (end_time - start_time).total_seconds()
@@ -89,6 +100,19 @@ def analyze_text(text: str):
         "tokens": [{"text": token.text, "pos": token.pos_, "embedding": token.vector.tolist()} for token in doc],
         "ner": [{"text": ent.text, "label": ent.label_} for ent in doc.ents],
     }
+
+    log = {
+        "endpoint": "/analysis",
+        "date": str(time.ctime()),
+        "text": text,
+        "sentiment": sentiment_category,
+        "confidence": sentiment_score,
+        "execution_time": execution_time,
+        "prediction_range": transformed_scores,
+        "NLP info": nlp_info
+    }
+
+    execution_logs.append(log)
 
     result = PredictionResult(sentiment_score, sentiment_category, execution_time, nlp_info)
     return result
@@ -102,7 +126,7 @@ def generate_report():
             detail="Por el momento no existen reportes!"
         )
 
-    csv_file_path = "poses_report.csv"
+    csv_file_path = "sentiment_analysis_report.csv"
 
     with open(csv_file_path, mode="w", newline="") as csv_file:
         fieldnames = execution_logs[0].keys()
@@ -110,4 +134,4 @@ def generate_report():
         writer.writeheader()
         writer.writerows(execution_logs)
 
-    return FileResponse(csv_file_path, filename="poses_report.csv", media_type="text/csv")
+    return FileResponse(csv_file_path, filename="sentiment_analysis_report.csv", media_type="text/csv")
