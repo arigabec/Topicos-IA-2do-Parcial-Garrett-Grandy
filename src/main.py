@@ -10,8 +10,9 @@ from starlette.middleware.cors import CORSMiddleware
 from src.config import get_settings
 from functools import cache
 from src.sentiment_analysis_model import SentimentAnalysisModel
-from src.nlp_analysis import textAnalysis
+from src.analysis_model import AnalysisModel
 import spacy
+from datetime import datetime
 
 # Colocamos en una lista los datos de cada request de /sentiment
 execution_logs = []
@@ -31,8 +32,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+class PredictionResult:
+    def __init__(self, sentiment_value, sentiment_category, execution_time, nlp_info):
+        self.sentiment_value = sentiment_value
+        self.sentiment_category = sentiment_category
+        self.execution_time = execution_time
+        self.nlp_info = nlp_info
 # Instancia del modelo de análisis de sentimiento
 sentiment_model = SentimentAnalysisModel()
+analysis_model = AnalysisModel()
 
 @cache
 def get_nlp():
@@ -68,9 +76,23 @@ def detect_sentiment(text: str, range: bool = False):
         raise HTTPException(status_code=500, detail=f"Error during sentiment analysis: {str(e)}")
 
 @app.post("/analysis")
-def generate_analysis(text: str, nlp=Depends(get_nlp)):
-    results = textAnalysis(text, "Análisis del sentimiento", nlp)
-    return results
+def analyze_text(text: str):
+    start_time = datetime.now()
+    
+    # Llama al modelo de análisis
+    sentiment_value, sentiment_category, doc = analysis_model.perform_analysis(text)
+
+    end_time = datetime.now()
+    execution_time = (end_time - start_time).total_seconds()
+
+    # Construye la información de la predicción y ejecución
+    nlp_info = {
+        "pos_tags": [token.pos_ for token in doc],
+        "ner": [(ent.text, ent.label_) for ent in doc.ents],
+    }
+
+    result = PredictionResult(sentiment_value, sentiment_category, execution_time, nlp_info)
+    return result
 
 @app.get("/reports")
 def generate_report():
