@@ -80,7 +80,7 @@ def analyze_text(text: str):
     start_time = datetime.now()
     
     # Llama al modelo de análisis
-    sentiment_value, sentiment_category, doc = analysis_model.perform_analysis(text)
+    sentiment_score, sentiment_category, subjectivity, doc = analysis_model.perform_analysis(text)
 
     end_time = datetime.now()
     execution_time = (end_time - start_time).total_seconds()
@@ -91,7 +91,7 @@ def analyze_text(text: str):
         "ner": [(ent.text, ent.label_) for ent in doc.ents],
     }
 
-    result = PredictionResult(sentiment_value, sentiment_category, execution_time, nlp_info)
+    result = PredictionResult(sentiment_score, sentiment_category, execution_time, nlp_info)
     return result
 
 @app.get("/reports")
