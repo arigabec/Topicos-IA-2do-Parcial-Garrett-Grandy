@@ -78,7 +78,7 @@ def detect_sentiment(text: str, range: bool = False):
 @app.post("/analysis")
 def analyze_text(text: str):
     start_time = datetime.now()
-    
+
     # Llama al modelo de análisis
     sentiment_score, sentiment_category, subjectivity, doc = analysis_model.perform_analysis(text)
 
@@ -88,7 +88,7 @@ def analyze_text(text: str):
     # Construye la información de la predicción y ejecución
     nlp_info = {
         "pos_tags": [token.pos_ for token in doc],
-        "ner": [(ent.text, ent.label_) for ent in doc.ents],
+        "ner": [{"text": ent.text, "label": ent.label_} for ent in doc.ents],
     }
 
     result = PredictionResult(sentiment_score, sentiment_category, execution_time, nlp_info)

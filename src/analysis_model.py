@@ -5,7 +5,7 @@ from spacytextblob.spacytextblob import SpacyTextBlob
 class AnalysisModel:
     def __init__(self):
         # Cargar el modelo de spaCy para NLP y agregar la extensión SpacyTextBlob
-        self.nlp = spacy.load("es_core_news_sm")
+        self.nlp = spacy.load("es_core_news_md")
         self.nlp.add_pipe('spacytextblob')
 
     def perform_analysis(self, text):
