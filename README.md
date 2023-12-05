@@ -49,10 +49,28 @@ sentimiento de los textos en diferentes idiomas (multilingue).
 
 ## Ejemplos de uso de la API en Google Cloud
 - /status: https://topicos-ia-2do-parcial-garrett-grandy-3n4j5w5q4a-uc.a.run.app/status
-- /sentiment: https://topicos-ia-2do-parcial-garrett-grandy-3n4j5w5q4a-uc.a.run.app/sentiment?text=Me%20encanta%20este%20proyecto
-- /analysis: https://topicos-ia-2do-parcial-garrett-grandy-3n4j5w5q4a-uc.a.run.app/analysis?text=Me%20encanta%20este%20proyecto
-- /analysis_v2: https://topicos-ia-2do-parcial-garrett-grandy-3n4j5w5q4a-uc.a.run.app/analysis_v2?text=Me%20encanta%20este%20proyecto
+- /sentiment: https://topicos-ia-2do-parcial-garrett-grandy-h6vokikroq-ue.a.run.app/docs#/default/detect_sentiment_sentiment_post
+### Ejemplo de texto 
+```bash
+En el rincón solitario de su habitación, María se aferraba a la carta desgastada que alguna vez olió a su amor perdido. Las lágrimas se deslizaban silenciosamente por sus mejillas mientras la nostalgia invadía su corazón. El tic-tac del reloj resonaba en la quietud, recordándole que el tiempo avanzaba sin piedad. En la penumbra, susurros de recuerdos se mezclaban con el suspiro del viento que golpeaba la ventana entreabierta. Afuera, la lluvia caía como lágrimas del cielo, reflejando el lamento que su alma callaba. El eco de un adiós no pronunciado resonaba en cada rincón, dejando a María perdida en un mar de despedidas no dichas.
+```
+### Respuesta
+ ![image](ejemplo6.png)
+- /analysis: https://topicos-ia-2do-parcial-garrett-grandy-h6vokikroq-ue.a.run.app/docs#/default/analyze_text_analysis_post
+### Ejemplo de texto 
+```bash
+Bajo el sol dorado de un día radiante, Ana y Juan compartieron sonrisas y susurros en un parque lleno de promesas. Entre risas y complicidad, descubrieron que la felicidad reside en los pequeños momentos compartidos. Con el atardecer como testigo, decidieron caminar juntos hacia un futuro donde el amor tejiera cada capítulo de sus vidas.
+```
+### Respuesta
+ ![image](ejemplo5.png)
+- /analysis_v2: https://topicos-ia-2do-parcial-garrett-grandy-h6vokikroq-ue.a.run.app/docs#/default/analyze_text_with_openai_analysis_v2_post
+### Ejemplo de texto 
+```bash
 
+En el tranquilo rincón de La Paz, Laura se sumergió en el suave murmullo de la naturaleza que abrazaba la ciudad. Los colores suaves del amanecer pintaban el cielo mientras ella paseaba por las calles adoquinadas, sintiendo la armonía en cada paso. Rodeada de serenidad, Laura encontró en ese instante la dicha simple de estar en el momento presente, donde el silencio hablaba más alto que cualquier preocupación. En La Paz alegre, la felicidad se revelaba en la calma, y Laura abrazó ese regalo con gratitud.
+```
+### Respuesta
+ ![image](ejemplo7.png)
 #Imagenes con pruebas de la API
 ## Ejemplo /analysis_v2 
 ![image](ejemploanalysis.png)
@@ -60,3 +78,5 @@ sentimiento de los textos en diferentes idiomas (multilingue).
 ![image](ejemplo2.png)
 ## Ejemplo /sentiment
 ![image](ejemplo3.png)
+## Ejemplo /status
+![image](ejemplo4.png)
