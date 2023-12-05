@@ -13,5 +13,6 @@ COPY .env /app/
 COPY src /app/src
 
 RUN apt-get update && apt-get install -y libgl1-mesa-glx libglib2.0-0
+RUN python -m spacy download es_core_news_md
 
 CMD uvicorn src.main:app --host 0.0.0.0 --port ${PORT}

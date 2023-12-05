@@ -9,4 +9,7 @@ numpy
 Pillow
 opencv-python-headless
 transformers
-datetime
+spacy
+pytorch-lightning
+torch
+
