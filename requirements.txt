@@ -9,5 +9,6 @@ numpy
 Pillow
 opencv-python-headless
 transformers
-datetime
-langchain
+spacy
+pytorch-lightning
+torch
