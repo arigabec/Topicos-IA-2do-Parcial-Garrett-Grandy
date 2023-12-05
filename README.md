@@ -48,7 +48,7 @@ resultado el POS Tagging y NER del texto. En este caso, el uso de este modelo fu
 sentimiento de los textos en diferentes idiomas (multilingue).
 
 ## Ejemplos de uso de la API en Google Cloud
-- /status: https://topicos-ia-2do-parcial-garrett-grandy-3n4j5w5q4a-uc.a.run.app/status
+- /status: https://topicos-ia-2do-parcial-garrett-grandy-h6vokikroq-ue.a.run.app/docs#/default/root_status_get
 - /sentiment: https://topicos-ia-2do-parcial-garrett-grandy-h6vokikroq-ue.a.run.app/docs#/default/detect_sentiment_sentiment_post
 ### Ejemplo de texto 
 ```bash
