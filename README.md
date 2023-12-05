@@ -46,3 +46,17 @@ los textos que sean analizados deben estar en español.
 - Openai - gpt_4: este modelo nos permite realizar un análisis NLP del texto enviado en la petición, devolviendo como 
 resultado el POS Tagging y NER del texto. En este caso, el uso de este modelo fue interesante ya que permite predecir el
 sentimiento de los textos en diferentes idiomas (multilingue).
+
+## Ejemplos de uso de la API en Google Cloud
+- /status: https://topicos-ia-2do-parcial-garrett-grandy-3n4j5w5q4a-uc.a.run.app/status
+- /sentiment: https://topicos-ia-2do-parcial-garrett-grandy-3n4j5w5q4a-uc.a.run.app/sentiment?text=Me%20encanta%20este%20proyecto
+- /analysis: https://topicos-ia-2do-parcial-garrett-grandy-3n4j5w5q4a-uc.a.run.app/analysis?text=Me%20encanta%20este%20proyecto
+- /analysis_v2: https://topicos-ia-2do-parcial-garrett-grandy-3n4j5w5q4a-uc.a.run.app/analysis_v2?text=Me%20encanta%20este%20proyecto
+
+#Imagenes con pruebas de la API
+## Ejemplo /analysis_v2 
+![image](ejemploanalysis.png)
+## Ejemplo /analysis
+![image](ejemplo2.png)
+## Ejemplo /sentiment
+![image](ejemplo3.png)
