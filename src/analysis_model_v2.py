@@ -48,6 +48,42 @@ class AnalysisModelV2:
         )
         cleaned_string = response['choices'][0]['message']['function_call']['arguments'].replace("\\n", "\n")
         parsed_object = json.loads(cleaned_string)
-        # print(parsed_object)
+
+        # Definimos la funcion que le pasaremos al modelo de openai para obtener POS tagging
+        pos_gpt_function = [
+            {
+                "name": "find_pos",
+                "description": "Perform Part-of-Speech tagging for the the input text.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "entities": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "word": {"type": "string",
+                                               "description": "Word extracted from text."},
+                                    "category": {"type": "string",
+                                                 "description": "Category of the named entity."}
+                                }
+                            }
+                        }
+                    }
+                },
+                "required": ["entities"]
+            }
+        ]
+
+        # Encontramos POS usando GPT-4
+        response_pos = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": text}],
+            functions=pos_gpt_function,
+            function_call={"name": "find_pos"},
+        )
+        cleaned_string_pos = response_pos['choices'][0]['message']['function_call']['arguments'].replace("\\n", "\n")
+        parsed_object_pos = json.loads(cleaned_string_pos)
+        print(parsed_object_pos)
 
         return score, label, transformed_scores, parsed_object
