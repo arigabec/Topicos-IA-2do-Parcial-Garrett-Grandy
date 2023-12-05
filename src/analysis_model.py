@@ -10,7 +10,7 @@ class AnalysisModel:
         self.nlp = spacy.load("es_core_news_md")
 
     def perform_analysis(self, text):
-        # Realizar el análisis de sentimiento y NLP utilizando spaCy y spacytextblob
+        # Realizar el análisis de sentimiento y NLP utilizando transformers y spacy
         doc = self.nlp(text)
         label, score, execution_time, transformed_scores = sentiment_model.analyze_sentiment(text)
 

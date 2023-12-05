@@ -6,13 +6,14 @@ from fastapi import (
 )
 import csv
 import time
+import spacy
 from fastapi.responses import FileResponse
 from starlette.middleware.cors import CORSMiddleware
 from src.config import get_settings
 from functools import cache
 from src.sentiment_analysis_model import SentimentAnalysisModel
 from src.analysis_model import AnalysisModel
-import spacy
+from src.analysis_model_v2 import AnalysisModelV2
 from datetime import datetime
 
 # Colocamos en una lista los datos de cada request de /sentiment y /analysis
@@ -39,9 +40,11 @@ class PredictionResult:
         self.sentiment_category = sentiment_category
         self.execution_time = execution_time
         self.nlp_info = nlp_info
+
 # Instancia del modelo de análisis de sentimiento
 sentiment_model = SentimentAnalysisModel()
 analysis_model = AnalysisModel()
+analysis_model_v2 = AnalysisModelV2()
 
 @cache
 def get_nlp():
@@ -117,6 +120,23 @@ def analyze_text(text: str):
     result = PredictionResult(sentiment_score, sentiment_category, execution_time, nlp_info)
     return result
 
+@app.post("/analysis_v2")
+def analyze_text_with_openai(text: str):
+    start_time = datetime.now()
+
+    # Llama al modelo de análisis
+    sentiment_score, sentiment_category, transformed_scores, ner = analysis_model_v2.perform_analysis(text)
+
+    nlp_info = {
+        "tokens": [{"text": "", "pos": "", "embedding": ""}],
+        "ner": ner
+    }
+
+    end_time = datetime.now()
+    execution_time = (end_time - start_time).total_seconds()
+
+    result = PredictionResult(sentiment_score, sentiment_category, execution_time, nlp_info)
+    return result
 
 @app.get("/reports")
 def generate_report():

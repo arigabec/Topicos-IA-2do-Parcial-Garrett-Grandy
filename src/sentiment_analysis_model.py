@@ -20,7 +20,7 @@ class SentimentAnalysisModel:
             transformed_value = (2 * percentage_dict["score"]) - 1
             percentage_dict["score"] = transformed_value
             transformed_scores.append(percentage_dict)
-        print(transformed_scores)
+        # print(transformed_scores)
 
         # Obtenemos el mayor valor de scores, que representa a la mejor prediccion del sentimiento
         best_prediction = {}
