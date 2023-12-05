@@ -55,7 +55,7 @@ def root():
     return {
         "status": "OK",
         "message": "API is running",
-        "model": "transformers - lxyuan/distilbert-base-multilingual-cased-sentiments-student, hugging_face - spacy, openai - gpt3.5 ",
+        "model": "transformers - lxyuan/distilbert-base-multilingual-cased-sentiments-student, hugging_face - spacy, openai - gpt_4 ",
         "service": "Análisis del sentimiento API es un servicio que permite analizar el sentimiento que expresa un texto.",
         "version": "1.0.0",
         "author": "Camila Grandy Camacho y Ariane Garrett Becerra",
@@ -125,15 +125,28 @@ def analyze_text_with_openai(text: str):
     start_time = datetime.now()
 
     # Llama al modelo de análisis
-    sentiment_score, sentiment_category, transformed_scores, ner = analysis_model_v2.perform_analysis(text)
+    sentiment_score, sentiment_category, transformed_scores, ner, pos = analysis_model_v2.perform_analysis(text)
 
     nlp_info = {
-        "tokens": [{"text": "", "pos": "", "embedding": ""}],
+        "pos": pos,
         "ner": ner
     }
 
     end_time = datetime.now()
     execution_time = (end_time - start_time).total_seconds()
+
+    log = {
+        "endpoint": "/analysis_v2",
+        "date": str(time.ctime()),
+        "text": text,
+        "sentiment": sentiment_category,
+        "confidence": sentiment_score,
+        "execution_time": execution_time,
+        "prediction_range": transformed_scores,
+        "NLP info": nlp_info
+    }
+
+    execution_logs.append(log)
 
     result = PredictionResult(sentiment_score, sentiment_category, execution_time, nlp_info)
     return result

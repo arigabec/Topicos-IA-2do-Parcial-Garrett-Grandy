@@ -1,12 +1,18 @@
 import openai
 import json
+import os
 from src.config import get_settings
 from src.sentiment_analysis_model import SentimentAnalysisModel
+from dotenv import load_dotenv
+
+load_dotenv()  # Cargamos el archivo .env
 
 _SETTINGS = get_settings()
 
 # Instancia del modelo de análisis de sentimiento
 sentiment_model = SentimentAnalysisModel()
+
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 class AnalysisModelV2:
     def perform_analysis(self, text):
@@ -53,7 +59,7 @@ class AnalysisModelV2:
         pos_gpt_function = [
             {
                 "name": "find_pos",
-                "description": "Perform Part-of-Speech tagging for the the input text.",
+                "description": "Perform Part-of-Speech tagging for the input text.",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -65,7 +71,7 @@ class AnalysisModelV2:
                                     "word": {"type": "string",
                                                "description": "Word extracted from text."},
                                     "category": {"type": "string",
-                                                 "description": "Category of the named entity."}
+                                                 "description": "Category of the named word."}
                                 }
                             }
                         }
@@ -84,6 +90,6 @@ class AnalysisModelV2:
         )
         cleaned_string_pos = response_pos['choices'][0]['message']['function_call']['arguments'].replace("\\n", "\n")
         parsed_object_pos = json.loads(cleaned_string_pos)
-        print(parsed_object_pos)
+        # print(parsed_object_pos)
 
-        return score, label, transformed_scores, parsed_object
+        return score, label, transformed_scores, parsed_object, parsed_object_pos

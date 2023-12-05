@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     service_name: str = "Análisis del sentimiento API"
     k_revision: str = "Local"
     log_level: str = "DEBUG"
-    openai_key: str
+    openai_api_key: str
     model: GPTModel = GPTModel.gpt_4
 
     class Config:
