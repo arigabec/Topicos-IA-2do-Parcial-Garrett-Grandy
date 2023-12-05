@@ -49,6 +49,7 @@ sentimiento de los textos en diferentes idiomas (multilingue).
 
 ## Ejemplos de uso de la API en Google Cloud
 - /status: https://topicos-ia-2do-parcial-garrett-grandy-h6vokikroq-ue.a.run.app/docs#/default/root_status_get
+![image](ejemplo4.png)
 - /sentiment: https://topicos-ia-2do-parcial-garrett-grandy-h6vokikroq-ue.a.run.app/docs#/default/detect_sentiment_sentiment_post
 ### Ejemplo de texto 
 ```bash
@@ -71,12 +72,7 @@ En el tranquilo rincón de La Paz, Laura se sumergió en el suave murmullo de la
 ```
 ### Respuesta
  ![image](ejemplo7.png)
-#Imagenes con pruebas de la API
-## Ejemplo /analysis_v2 
-![image](ejemploanalysis.png)
-## Ejemplo /analysis
-![image](ejemplo2.png)
-## Ejemplo /sentiment
-![image](ejemplo3.png)
-## Ejemplo /status
-![image](ejemplo4.png)
+
+
+
+
